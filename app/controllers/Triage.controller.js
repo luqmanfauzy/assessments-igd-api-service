@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import TriageModel from '../models/Triage.model.js';
 import { buildResponse } from '../helpers/App.helper.js';
+import { determineTriage } from '../helpers/Triage.helper.js';
 
 const assessmentSchema = Joi.object({
   no_rawat: Joi.string().allow('', null),
@@ -26,8 +27,8 @@ const assessmentSchema = Joi.object({
   gcs_v: Joi.number().integer().min(1).max(5).allow(null),
   gcs_m: Joi.number().integer().min(1).max(6).allow(null),
   doa: Joi.boolean().default(false),
-  level_triase: Joi.string().valid('HIJAU', 'KUNING', 'MERAH', 'HITAM', 'ABU').allow(null),
-  prioritas_triase: Joi.string().valid('SEGERA', 'DARURAT', 'URGENT', 'NON_URGENT').allow(null),
+  level_triase: Joi.string().valid('MERAH', 'OREN', 'KUNING', 'HIJAU', 'BIRU', 'PUTIH', 'HITAM').allow('', null),
+  prioritas_triase: Joi.string().valid('SEGERA', 'DARURAT', 'URGENT', 'SEMI_URGENT', 'NON_URGENT').allow('', null),
   perawat_triase_id: Joi.number().allow(null),
   items: Joi.array().items(Joi.object({
     rule_id: Joi.number().required(),
@@ -76,6 +77,31 @@ const createAssessment = async (req, res, next) => {
       assessmentData.no_rawat = `RAWAT-${datePart}-${timePart}`;
     }
 
+    // Auto determine/validate triage level and priority
+    const determined = await determineTriage(assessmentData, items);
+
+    const LEVEL_WEIGHTS = {
+      HITAM: 6,
+      MERAH: 5,
+      OREN: 4,
+      KUNING: 3,
+      HIJAU: 2,
+      BIRU: 1,
+      PUTIH: 1
+    };
+
+    if (!assessmentData.level_triase || assessmentData.level_triase.trim() === '') {
+      assessmentData.level_triase = determined.level_triase;
+      assessmentData.prioritas_triase = determined.prioritas_triase;
+    } else {
+      const providedWeight = LEVEL_WEIGHTS[assessmentData.level_triase] || 0;
+      const determinedWeight = LEVEL_WEIGHTS[determined.level_triase] || 0;
+      if (determinedWeight > providedWeight) {
+        assessmentData.level_triase = determined.level_triase;
+        assessmentData.prioritas_triase = determined.prioritas_triase;
+      }
+    }
+
     const data = await TriageModel.createAssessment(assessmentData, items);
 
     return res.status(201).json(buildResponse(true, 'Triage assessment created', data));
@@ -108,10 +134,33 @@ const listAssessments = async (req, res, next) => {
   }
 };
 
+const previewTriage = async (req, res, next) => {
+  try {
+    const { value, error } = assessmentSchema.validate(req.body, { abortEarly: false });
+
+    if (error) {
+      return res.status(422).json(buildResponse(false, 'Validation failed', error.details));
+    }
+
+    const { items, ...assessmentData } = value;
+
+    // Auto determine triage level and priority
+    const determined = await determineTriage(assessmentData, items);
+
+    return res.json(buildResponse(true, 'Triage preview calculated', {
+      level_triase: determined.level_triase,
+      prioritas_triase: determined.prioritas_triase
+    }));
+  } catch (error) {
+    return next(error);
+  }
+};
+
 export default {
   listCaseTypes,
   listCategories,
   createAssessment,
   getAssessment,
-  listAssessments
+  listAssessments,
+  previewTriage
 };

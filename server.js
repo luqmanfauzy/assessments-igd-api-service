@@ -60,7 +60,7 @@ app.use(errorHandler);
 const server = app.listen(config.app.port, async () => {
   await connectDatabase();
   logger.info(`${config.app.name} running at ${config.app.url}`);
-  logger.info(`Available endpoints: ${listEndpoints(app).length}`);
+  logger.info(`Available endpoints: ${listEndpoints(app.router || app).length}`);
 });
 
 const shutdown = async () => {

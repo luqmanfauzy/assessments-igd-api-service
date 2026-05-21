@@ -39,8 +39,8 @@ async function seedTriageAssessments(count = 5) {
         gcs_v,
         gcs_m,
         total_gcs,
-        level_triase: faker.helpers.arrayElement(['HIJAU', 'KUNING', 'MERAH', 'HITAM', 'ABU']),
-        prioritas_triase: faker.helpers.arrayElement(['SEGERA', 'DARURAT', 'URGENT', 'NON_URGENT']),
+        level_triase: faker.helpers.arrayElement(['MERAH', 'OREN', 'KUNING', 'HIJAU', 'BIRU', 'PUTIH', 'HITAM']),
+        prioritas_triase: faker.helpers.arrayElement(['SEGERA', 'DARURAT', 'URGENT', 'SEMI_URGENT', 'NON_URGENT']),
         assessment_items: {
           create: randomRules.map(rule => ({
             master_triage_rule_id: rule.id,

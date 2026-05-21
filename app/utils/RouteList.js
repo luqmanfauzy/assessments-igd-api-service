@@ -1,7 +1,7 @@
 import listEndpoints from 'express-list-endpoints';
 import app from '../../server.js';
 
-const routes = listEndpoints(app);
+const routes = listEndpoints(app.router || app);
 
 console.log('\n--- API Route List ---');
 console.table(routes.map(r => ({

@@ -31,11 +31,6 @@ enum AlasanKedatangan {
   DATANG_SENDIRI
   POLISI
   RUJUKAN
-  BIDAN
-  PUSKESMAS
-  RUMAH_SAKIT
-  POLIKLINIK
-  FASKES_LAIN
   TIDAK_ADA
 }
 
@@ -46,17 +41,20 @@ enum StatusJalanNafas {
 }
 
 enum LevelTriase {
-  HIJAU
-  KUNING
   MERAH
+  OREN
+  KUNING
+  HIJAU
+  BIRU
+  PUTIH
   HITAM
-  ABU
 }
 
 enum PrioritasTriase {
   SEGERA
   DARURAT
   URGENT
+  SEMI_URGENT
   NON_URGENT
 }
 
@@ -64,7 +62,8 @@ enum TingkatKesadaran {
   COMPOS_MENTIS
   APATIS
   SOMNOLEN
-  SOPOR
+  DELIRIUM
+  STUPOR
   KOMA
 }
 

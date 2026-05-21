@@ -100,6 +100,24 @@ router.post('/assessments', TriageController.createAssessment);
 
 /**
  * @swagger
+ * /api/triage/preview:
+ *   post:
+ *     summary: Preview triage level and priority without saving
+ *     tags: [Triage]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/TriageAssessment'
+ *     responses:
+ *       200:
+ *         description: Triage preview calculated
+ */
+router.post('/preview', TriageController.previewTriage);
+
+/**
+ * @swagger
  * /api/triage/assessments/{id}:
  *   get:
  *     summary: Get triage assessment details
