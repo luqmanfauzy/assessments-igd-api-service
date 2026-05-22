@@ -24,27 +24,27 @@ async function seedTriageAssessments(count = 5) {
 
     await prisma.triageAssessment.create({
       data: {
-        no_rawat: faker.string.alphanumeric({ length: 10 }).toUpperCase(),
-        no_rm: faker.string.numeric(6),
-        nama_pasien: faker.person.fullName(),
-        tanggal_kunjungan: faker.date.recent(),
-        cara_masuk: faker.helpers.arrayElement(['JALAN', 'BRANKAR', 'KURSI_RODA', 'DIGENDONG']),
-        transportasi: faker.helpers.arrayElement(['AGD', 'SENDIRI', 'SWASTA', 'TIDAK_ADA']),
-        alasan_kedatangan: faker.helpers.arrayElement(['DATANG_SENDIRI', 'POLISI', 'RUJUKAN', 'BIDAN', 'PUSKESMAS', 'RUMAH_SAKIT', 'POLIKLINIK', 'FASKES_LAIN', 'TIDAK_ADA']),
-        macam_kasus_id: randomCaseType.id,
-        keluhan_utama: faker.lorem.sentence(),
-        suhu: faker.number.float({ min: 35, max: 40, fractionDigits: 1 }),
-        skala_nyeri: faker.number.int({ min: 0, max: 10 }),
+        visit_number: faker.string.alphanumeric({ length: 10 }).toUpperCase(),
+        medical_record_number: faker.string.numeric(6),
+        patient_name: faker.person.fullName(),
+        visit_date: faker.date.recent(),
+        arrival_method: faker.helpers.arrayElement(['WALK_IN', 'STRETCHER', 'WHEELCHAIR', 'CARRIED']),
+        transportation: faker.helpers.arrayElement(['AMBULANCE', 'SELF', 'PRIVATE', 'NONE']),
+        arrival_reason: faker.helpers.arrayElement(['SELF_ARRIVAL', 'POLICE', 'REFERRAL', 'NONE']),
+        case_type_id: randomCaseType.id,
+        chief_complaint: faker.lorem.sentence(),
+        temperature: faker.number.float({ min: 35, max: 40, fractionDigits: 1 }),
+        pain_scale: faker.number.int({ min: 0, max: 10 }),
         gcs_e,
         gcs_v,
         gcs_m,
         total_gcs,
-        level_triase: faker.helpers.arrayElement(['MERAH', 'OREN', 'KUNING', 'HIJAU', 'BIRU', 'PUTIH', 'HITAM']),
-        prioritas_triase: faker.helpers.arrayElement(['SEGERA', 'DARURAT', 'URGENT', 'SEMI_URGENT', 'NON_URGENT']),
+        triage_level: faker.helpers.arrayElement(['RED', 'ORANGE', 'YELLOW', 'GREEN', 'BLUE', 'WHITE', 'BLACK']),
+        triage_priority: faker.helpers.arrayElement(['IMMEDIATE', 'EMERGENCY', 'URGENT', 'SEMI_URGENT', 'NON_URGENT']),
         assessment_items: {
           create: randomRules.map(rule => ({
             master_triage_rule_id: rule.id,
-            catatan: faker.lorem.words(3)
+            notes: faker.lorem.words(3)
           }))
         }
       }

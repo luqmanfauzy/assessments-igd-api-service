@@ -13,134 +13,136 @@ datasource db {
 // =========================
 //
 
-enum CaraMasuk {
-  JALAN
-  BRANKAR
-  KURSI_RODA
-  DIGENDONG
+enum ArrivalMethod {
+  WALK_IN
+  STRETCHER
+  WHEELCHAIR
+  CARRIED
 }
 
-enum Transportasi {
-  AGD
-  SENDIRI
-  SWASTA
-  TIDAK_ADA
+enum Transportation {
+  AMBULANCE
+  SELF
+  PRIVATE
+  NONE
 }
 
-enum AlasanKedatangan {
-  DATANG_SENDIRI
-  POLISI
-  RUJUKAN
-  TIDAK_ADA
+enum ArrivalReason {
+  SELF_ARRIVAL
+  POLICE
+  REFERRAL
+  NONE
 }
 
-enum StatusJalanNafas {
-  BEBAS
-  OBSTRUKSI_PARSIAL
-  OBSTRUKSI_TOTAL
+enum AirwayStatus {
+  CLEAR
+  PARTIAL_OBSTRUCTION
+  TOTAL_OBSTRUCTION
 }
 
-enum LevelTriase {
-  MERAH
-  OREN
-  KUNING
-  HIJAU
-  BIRU
-  PUTIH
-  HITAM
-}
+enum TriageLevel {
+  RED
+  ORANGE
+  YELLOW
+  GREEN
+  BLUE
+  WHITE
+  BLACK
+}()
 
-enum PrioritasTriase {
-  SEGERA
-  DARURAT
+enum TriagePriority {
+  IMMEDIATE
+  EMERGENCY
   URGENT
   SEMI_URGENT
   NON_URGENT
 }
 
-enum TingkatKesadaran {
+enum ConsciousnessLevel {
   COMPOS_MENTIS
-  APATIS
-  SOMNOLEN
+  APATHY
+  SOMNOLENCE
   DELIRIUM
   STUPOR
-  KOMA
+  COMA
 }
 
 //
 // =========================
-// MASTER MACAM KASUS
+// MASTER CASE TYPE
 // =========================
 //
 
 model MasterTriageCaseType {
   id                    BigInt @id @default(autoincrement())
 
-  kode                  String @unique @db.VarChar(10)
-  nama_kasus            String @db.VarChar(100)
+  code                  String @unique @db.VarChar(10)
+  case_name             String @db.VarChar(100)
 
-  deskripsi             String? @db.Text
-  aktif                 Boolean @default(true)
+  description           String? @db.Text
+  is_active             Boolean @default(true)
 
-  triase                TriageAssessment[]
+  triage_assessments    TriageAssessment[]
 
   created_at            DateTime @default(now())
   updated_at            DateTime @updatedAt
+  deleted_at            DateTime?
 
   @@map("master_triage_case_types")
 }
 
 //
 // =========================
-// MASTER KATEGORI PEMERIKSAAN
+// MASTER EXAMINATION CATEGORY
 // =========================
 //
 
 model MasterTriageCategory {
   id                    BigInt @id @default(autoincrement())
 
-  kode                  String @unique @db.VarChar(20)
+  code                  String @unique @db.VarChar(20)
 
-  nama_kategori         String @db.VarChar(100)
+  category_name         String @db.VarChar(100)
 
-  urutan                Int?
+  sort_order            Int?
 
   rules                 MasterTriageRule[]
 
   created_at            DateTime @default(now())
   updated_at            DateTime @updatedAt
+  deleted_at            DateTime?
 
   @@map("master_triage_categories")
 }
 
 //
 // =========================
-// MASTER RULE TRIAGE
-// mirip logic khanza
+// MASTER TRIAGE RULE
 // =========================
 //
 
 model MasterTriageRule {
   id                    BigInt @id @default(autoincrement())
 
-  kategori_id           BigInt
+  category_id           BigInt
 
-  kategori              MasterTriageCategory @relation(fields: [kategori_id], references: [id])
+  category              MasterTriageCategory @relation(fields: [category_id], references: [id])
 
-  skala                 Int
+  scale                 Int
 
-  nama_rule             String @db.VarChar(150)
+  rule_name             String @db.VarChar(150)
 
-  deskripsi             String? @db.Text
+  description           String? @db.Text
 
-  level_triase          LevelTriase
+  triage_level          TriageLevel
 
-  prioritas             PrioritasTriase
+  priority              TriagePriority
 
-  aktif                 Boolean @default(true)
+  is_active             Boolean @default(true)
 
   created_at            DateTime @default(now())
   updated_at            DateTime @updatedAt
+  deleted_at            DateTime?
 
   assessment_items      TriageAssessmentItem[]
 
@@ -157,66 +159,66 @@ model TriageAssessment {
   id                            BigInt @id @default(autoincrement())
 
   //
-  // IDENTITAS
+  // IDENTITY
   //
 
-  no_rawat                      String @db.VarChar(30)
-  no_rm                         String @db.VarChar(30)
+  visit_number                  String @db.VarChar(30)
+  medical_record_number         String @db.VarChar(30)
 
-  nama_pasien                   String @db.VarChar(150)
+  patient_name                  String @db.VarChar(150)
 
-  tanggal_kunjungan             DateTime
-
-  //
-  // KEDATANGAN
-  //
-
-  cara_masuk                    CaraMasuk
-
-  transportasi                  Transportasi
-
-  alasan_kedatangan             AlasanKedatangan
-
-  keterangan                    String? @db.Text
+  visit_date                    DateTime
 
   //
-  // MACAM KASUS
+  // ARRIVAL
   //
 
-  macam_kasus_id                BigInt?
+  arrival_method                ArrivalMethod
 
-  macam_kasus                   MasterTriageCaseType? @relation(fields: [macam_kasus_id], references: [id])
+  transportation                Transportation
 
-  //
-  // KELUHAN
-  //
+  arrival_reason                ArrivalReason
 
-  keluhan_utama                 String @db.Text
+  notes                         String? @db.Text
 
   //
-  // VITAL SIGN
+  // CASE TYPE
   //
 
-  suhu                          Decimal? @db.Decimal(4,1)
+  case_type_id                  BigInt?
 
-  skala_nyeri                   Int?
-
-  tekanan_darah_sistolik        Int?
-  tekanan_darah_diastolik       Int?
-
-  nadi_per_menit                Int?
-
-  saturasi_oksigen              Decimal? @db.Decimal(5,2)
-
-  respirasi_per_menit           Int?
+  case_type                     MasterTriageCaseType? @relation(fields: [case_type_id], references: [id])
 
   //
-  // PEMERIKSAAN KHANZA STYLE
+  // COMPLAINT
   //
 
-  tingkat_kesadaran             TingkatKesadaran?
+  chief_complaint               String @db.Text
 
-  status_jalan_nafas            StatusJalanNafas?
+  //
+  // VITAL SIGNS
+  //
+
+  temperature                   Decimal? @db.Decimal(4,1)
+
+  pain_scale                    Int?
+
+  systolic_blood_pressure       Int?
+  diastolic_blood_pressure      Int?
+
+  heart_rate                    Int?
+
+  oxygen_saturation             Decimal? @db.Decimal(5,2)
+
+  respiratory_rate              Int?
+
+  //
+  // EXAMINATION
+  //
+
+  consciousness_level           ConsciousnessLevel?
+
+  airway_status                 AirwayStatus?
 
   gcs_e                         Int?
   gcs_v                         Int?
@@ -231,49 +233,40 @@ model TriageAssessment {
   doa                           Boolean @default(false)
 
   //
-  // HASIL TRIAGE
+  // TRIAGE RESULT
   //
 
-  level_triase                  LevelTriase?
+  triage_level                  TriageLevel?
 
-  prioritas_triase              PrioritasTriase?
+  triage_priority               TriagePriority?
 
   //
-  // PETUGAS
+  // STAFF
   //
 
-  perawat_triase_id             BigInt?
-
-  created_by                    BigInt?
-  updated_by                    BigInt?
-
-  waktu_assessment              DateTime @default(now())
+  assessment_time               DateTime @default(now())
 
   created_at                    DateTime @default(now())
   updated_at                    DateTime @updatedAt
   deleted_at                    DateTime?
 
   //
-  // DETAIL CHECKLIST
+  // CHECKLIST DETAILS
   //
 
   assessment_items              TriageAssessmentItem[]
 
-  @@index([no_rawat])
-  @@index([no_rm])
-  @@index([tanggal_kunjungan])
-  @@index([level_triase])
+  @@index([visit_number])
+  @@index([medical_record_number])
+  @@index([visit_date])
+  @@index([triage_level])
 
   @@map("triage_assessments")
 }
 
 //
 // =========================
-// DETAIL CHECKLIST YANG DIPILIH
-// contoh:
-// GCS < 9
-// Obstruksi parsial
-// dll
+// SELECTED ASSESSMENT ITEMS
 // =========================
 //
 
@@ -288,9 +281,10 @@ model TriageAssessmentItem {
 
   master_triage_rule            MasterTriageRule @relation(fields: [master_triage_rule_id], references: [id])
 
-  catatan                       String? @db.Text
+  notes                         String? @db.Text
 
   created_at                    DateTime @default(now())
+  deleted_at                    DateTime?
 
   @@map("triage_assessment_items")
 }

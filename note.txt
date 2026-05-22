@@ -1,168 +1,33 @@
+# API Updated to English
+
+All table columns and field names have been renamed to English.
+
+Example JSON for POST /api/triage/assessments:
+
 {
-    2   "no_rawat": "2024/05/19/0003",
-    3   "no_rm": "111222333",
-    4   "nama_pasien": "Pasien Gawat",
-    5   "tanggal_kunjungan": "2024-05-19T11:00:00Z",
-    6   "cara_masuk": "BRANKAR",
-    7   "transportasi": "AGD",
-    8   "alasan_kedatangan": "DATANG_SENDIRI",
-    9   "keluhan_utama": "Tidak sadarkan diri",
-   10   "keterangan": "Ditemukan pingsan di jalan",
-   11   "macam_kasus_id": 1,
-   12   "suhu": 35.5,
-   13   "skala_nyeri": 0,
-   14   "tekanan_darah_sistolik": 75,
-   15   "tekanan_darah_diastolik": 50,
-   16   "nadi_per_menit": 160,
-   17   "saturasi_oksigen": 85,
-   18   "respirasi_per_menit": 38,
-   19   "tingkat_kesadaran": "KOMA",
-   20   "status_jalan_nafas": "OBSTRUKSI_TOTAL",
-   21   "gcs_e": 1,
-   22   "gcs_v": 1,
-   23   "gcs_m": 1,
-   24   "doa": false
-   25 }
+  "visit_number": "2024/05/19/0003",
+  "medical_record_number": "111222333",
+  "patient_name": "Emergency Patient",
+  "visit_date": "2024-05-19T11:00:00Z",
+  "arrival_method": "STRETCHER",
+  "transportation": "AMBULANCE",
+  "arrival_reason": "NONE",
+  "chief_complaint": "Unconscious",
+  "notes": "Found unconscious on the street",
+  "case_type_id": 1,
+  "temperature": 35.5,
+  "pain_scale": 0,
+  "systolic_blood_pressure": 75,
+  "diastolic_blood_pressure": 50,
+  "heart_rate": 160,
+  "oxygen_saturation": 85,
+  "respiratory_rate": 38,
+  "consciousness_level": "COMA",
+  "airway_status": "TOTAL_OBSTRUCTION",
+  "gcs_e": 1,
+  "gcs_v": 1,
+  "gcs_m": 1,
+  "doa": false
+}
 
-  2. OREN (Darurat - Nyeri Dada & Sesak Berat)
-  Pemicu utama: Skala nyeri sangat tinggi (9) dan Tekanan Darah sangat tinggi (230).
-
-    1 {
-    2   "no_rawat": "2024/05/19/0004",
-    3   "no_rm": "222333444",
-    4   "nama_pasien": "Pasien Darurat",
-    5   "tanggal_kunjungan": "2024-05-19T12:00:00Z",
-    6   "cara_masuk": "KURSI_RODA",
-    7   "transportasi": "SWASTA",
-    8   "alasan_kedatangan": "DATANG_SENDIRI",
-    9   "keluhan_utama": "Nyeri dada seperti tertindih",
-   10   "keterangan": "Nyeri menjalar ke lengan kiri",
-   11   "macam_kasus_id": 1,
-   12   "suhu": 36.8,
-   13   "skala_nyeri": 9,
-   14   "tekanan_darah_sistolik": 230,
-   15   "tekanan_darah_diastolik": 120,
-   16   "nadi_per_menit": 115,
-   17   "saturasi_oksigen": 91,
-   18   "respirasi_per_menit": 32,
-   19   "tingkat_kesadaran": "SOMNOLEN",
-   20   "status_jalan_nafas": "BEBAS",
-   21   "gcs_e": 3,
-   22   "gcs_v": 4,
-   23   "gcs_m": 5,
-   24   "doa": false
-   25 }
-
-  3. KUNING (Urgent - Demam Tinggi & Nyeri Sedang)
-  Pemicu utama: Suhu tinggi (39.5) dan Skala nyeri sedang (6).
-
-    1 {
-    2   "no_rawat": "2024/05/19/0005",
-    3   "no_rm": "333444555",
-    4   "nama_pasien": "Pasien Urgent",
-    5   "tanggal_kunjungan": "2024-05-19T13:00:00Z",
-    6   "cara_masuk": "JALAN",
-    7   "transportasi": "SENDIRI",
-    8   "alasan_kedatangan": "DATANG_SENDIRI",
-    9   "keluhan_utama": "Demam tinggi dan sakit perut",
-   10   "keterangan": "Demam sudah 3 hari",
-   11   "macam_kasus_id": 1,
-   12   "suhu": 39.5,
-   13   "skala_nyeri": 6,
-   14   "tekanan_darah_sistolik": 130,
-   15   "tekanan_darah_diastolik": 85,
-   16   "nadi_per_menit": 105,
-   17   "saturasi_oksigen": 95,
-   18   "respirasi_per_menit": 26,
-   19   "tingkat_kesadaran": "COMPOS_MENTIS",
-   20   "status_jalan_nafas": "BEBAS",
-   21   "gcs_e": 4,
-   22   "gcs_v": 5,
-   23   "gcs_m": 6,
-   24   "doa": false
-   25 }
-
-  4. HIJAU (Semi Urgent - Luka Ringan)
-  Pemicu utama: Skala nyeri rendah (2) dan suhu sedikit meningkat (37.8).
-
-    1 {
-    2   "no_rawat": "2024/05/19/0006",
-    3   "no_rm": "444555666",
-    4   "nama_pasien": "Pasien Hijau",
-    5   "tanggal_kunjungan": "2024-05-19T14:00:00Z",
-    6   "cara_masuk": "JALAN",
-    7   "transportasi": "SENDIRI",
-    8   "alasan_kedatangan": "DATANG_SENDIRI",
-    9   "keluhan_utama": "Luka lecet jatuh dari motor",
-   10   "keterangan": "Hanya luka permukaan",
-   11   "macam_kasus_id": 2,
-   12   "suhu": 37.8,
-   13   "skala_nyeri": 2,
-   14   "tekanan_darah_sistolik": 120,
-   15   "tekanan_darah_diastolik": 80,
-   16   "nadi_per_menit": 88,
-   17   "saturasi_oksigen": 98,
-   18   "respirasi_per_menit": 20,
-   19   "tingkat_kesadaran": "COMPOS_MENTIS",
-   20   "status_jalan_nafas": "BEBAS",
-   21   "gcs_e": 4,
-   22   "gcs_v": 5,
-   23   "gcs_m": 6,
-   24   "doa": false
-   25 }
-
-  Tips Penggunaan:
-   * Jika Anda menggunakan API /api/triage/preview, Anda tidak perlu mengisi field level_triase di dalam JSON.
-   * Sistem akan selalu mengambil nilai terberat dari semua parameter (Metode Most Urgent Feature). Misalnya, meskipun nadi normal, jika saturasi oksigen rendah, sistem tetap akan memberikan warna MERAH.
-▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
- > putih?
-▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
-
-  Auto-Triage Example: PUTIH: Providing a comprehensive example for the PUTIH triage level.
-
-
-✦ Warna PUTIH dalam standar ATS biasanya digunakan untuk kasus yang sangat ringan atau bersifat administratif/pemeriksaan rutin (serupa dengan Biru).
-
-  Karena secara otomatis sistem akan menghitung kondisi normal sebagai BIRU, untuk mendapatkan hasil PUTIH Anda bisa menyertakan field level_triase secara eksplisit dalam input.
-
-  Berikut contoh input lengkapnya:
-
-  Endpoint: POST /api/triage/preview (atau saat simpan ke /assessments)
-
-    1 {
-    2   "no_rawat": "2024/05/19/0007",
-    3   "no_rm": "555666777",
-    4   "nama_pasien": "Pasien Putih",
-    5   "tanggal_kunjungan": "2024-05-19T15:00:00Z",
-    6   "cara_masuk": "JALAN",
-    7   "transportasi": "SENDIRI",
-    8   "alasan_kedatangan": "DATANG_SENDIRI",
-    9   "keluhan_utama": "Hanya ingin ganti perban / minta surat sehat",
-   10   "keterangan": "Kasus administratif atau tindakan rutin ringan",
-   11   "macam_kasus_id": 2,
-   12   "suhu": 36.5,
-   13   "skala_nyeri": 0,
-   14   "tekanan_darah_sistolik": 115,
-   15   "tekanan_darah_diastolik": 75,
-   16   "nadi_per_menit": 72,
-   17   "saturasi_oksigen": 99,
-   18   "respirasi_per_menit": 16,
-   19   "tingkat_kesadaran": "COMPOS_MENTIS",
-   20   "status_jalan_nafas": "BEBAS",
-   21   "gcs_e": 4,
-   22   "gcs_v": 5,
-   23   "gcs_m": 6,
-   24   "doa": false,
-   25   "level_triase": "PUTIH"
-   26 }
-
-  Hasil Respon:
-
-   1 {
-   2   "success": true,
-   3   "message": "Triage preview calculated",
-   4   "data": {
-   5     "level_triase": "PUTIH",
-   6     "prioritas_triase": "NON_URGENT"
-   7   }
-   8 }
+See API_DOCUMENTATION.md for full details.

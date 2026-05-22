@@ -7,36 +7,35 @@ This document provides the JSON structure for creating or updating records in th
 
 ```json
 {
-  "no_rawat": "2024/05/19/0001",
-  "no_rm": "123456",
-  "nama_pasien": "John Doe",
-  "tanggal_kunjungan": "2024-05-19T10:00:00Z",
-  "cara_masuk": "JALAN",
-  "transportasi": "SENDIRI",
-  "alasan_kedatangan": "DATANG_SENDIRI",
-  "keluhan_utama": "Nyeri dada dan sesak nafas",
-  "keterangan": "Pasien datang dengan keluarga",
-  "macam_kasus_id": 1,
-  "suhu": 36.5,
-  "skala_nyeri": 7,
-  "tekanan_darah_sistolik": 120,
-  "tekanan_darah_diastolik": 80,
-  "nadi_per_menit": 80,
-  "saturasi_oksigen": 98.5,
-  "respirasi_per_menit": 20,
-  "tingkat_kesadaran": "COMPOS_MENTIS",
-  "status_jalan_nafas": "BEBAS",
+  "visit_number": "2024/05/19/0001",
+  "medical_record_number": "123456",
+  "patient_name": "John Doe",
+  "visit_date": "2024-05-19T10:00:00Z",
+  "arrival_method": "WALK_IN",
+  "transportation": "SELF",
+  "arrival_reason": "SELF_ARRIVAL",
+  "chief_complaint": "Chest pain and shortness of breath",
+  "notes": "Patient arrived with family",
+  "case_type_id": 1,
+  "temperature": 36.5,
+  "pain_scale": 7,
+  "systolic_blood_pressure": 120,
+  "diastolic_blood_pressure": 80,
+  "heart_rate": 80,
+  "oxygen_saturation": 98.5,
+  "respiratory_rate": 20,
+  "consciousness_level": "COMPOS_MENTIS",
+  "airway_status": "CLEAR",
   "gcs_e": 4,
   "gcs_v": 5,
   "gcs_m": 6,
   "doa": false,
-  "level_triase": "HIJAU",
-  "prioritas_triase": "NON_URGENT",
-  "perawat_triase_id": 1,
+  "triage_level": "GREEN",
+  "triage_priority": "SEMI_URGENT",
   "items": [
     {
       "rule_id": 1,
-      "catatan": "Pasien sadar penuh"
+      "notes": "Patient is fully conscious"
     }
   ]
 }
@@ -47,10 +46,10 @@ This document provides the JSON structure for creating or updating records in th
 
 ```json
 {
-  "kode": "TRAUMA",
-  "nama_kasus": "Trauma",
-  "deskripsi": "Kasus kecelakaan atau benturan",
-  "aktif": true
+  "code": "TRAUMA",
+  "case_name": "Trauma",
+  "description": "Accident or impact cases",
+  "is_active": true
 }
 ```
 
@@ -59,9 +58,9 @@ This document provides the JSON structure for creating or updating records in th
 
 ```json
 {
-  "kode": "JALAN_NAFAS",
-  "nama_kategori": "Jalan Nafas",
-  "urutan": 1
+  "code": "AIRWAY",
+  "category_name": "Airway",
+  "sort_order": 1
 }
 ```
 
@@ -70,59 +69,59 @@ This document provides the JSON structure for creating or updating records in th
 
 ```json
 {
-  "kategori_id": 1,
-  "skala": 1,
-  "nama_rule": "Obstruksi Total",
-  "deskripsi": "Jalan nafas tersumbat sepenuhnya",
-  "level_triase": "MERAH",
-  "prioritas": "SEGERA",
-  "aktif": true
+  "category_id": 1,
+  "scale": 1,
+  "rule_name": "Total Obstruction",
+  "description": "Airway is completely blocked",
+  "triage_level": "RED",
+  "priority": "IMMEDIATE",
+  "is_active": true
 }
 ```
 
 ## Enum Values Reference
 
-- **CaraMasuk:** `JALAN`, `BRANKAR`, `KURSI_RODA`, `DIGENDONG`
-- **Transportasi:** `AGD`, `SENDIRI`, `SWASTA`, `TIDAK_ADA`
-- **AlasanKedatangan:** `DATANG_SENDIRI`, `POLISI`, `RUJUKAN`, `BIDAN`, `PUSKESMAS`, `RUMAH_SAKIT`, `POLIKLINIK`, `FASKES_LAIN`, `TIDAK_ADA`
-- **StatusJalanNafas:** `BEBAS`, `OBSTRUKSI_PARSIAL`, `OBSTRUKSI_TOTAL`
-- **LevelTriase:** `MERAH` (ATS 1), `OREN` (ATS 2), `KUNING` (ATS 3), `HIJAU` (ATS 4), `BIRU` (ATS 5), `PUTIH` (ATS 5 Alternative), `HITAM` (DOA)
-- **PrioritasTriase:** `SEGERA` (Immediate), `DARURAT` (Emergency), `URGENT` (Urgent), `SEMI_URGENT` (Semi-urgent), `NON_URGENT` (Non-urgent)
-- **TingkatKesadaran:** `COMPOS_MENTIS`, `APATIS`, `SOMNOLEN`, `SOPOR`, `KOMA`
+- **ArrivalMethod:** `WALK_IN`, `STRETCHER`, `WHEELCHAIR`, `CARRIED`
+- **Transportation:** `AMBULANCE`, `SELF`, `PRIVATE`, `NONE`
+- **ArrivalReason:** `SELF_ARRIVAL`, `POLICE`, `REFERRAL`, `NONE`
+- **AirwayStatus:** `CLEAR`, `PARTIAL_OBSTRUCTION`, `TOTAL_OBSTRUCTION`
+- **TriageLevel:** `RED` (ATS 1), `ORANGE` (ATS 2), `YELLOW` (ATS 3), `GREEN` (ATS 4), `BLUE` (ATS 5), `WHITE` (ATS 5 Alternative), `BLACK` (DOA)
+- **TriagePriority:** `IMMEDIATE` (Immediate), `EMERGENCY` (Emergency), `URGENT` (Urgent), `SEMI_URGENT` (Semi-urgent), `NON_URGENT` (Non-urgent)
+- **ConsciousnessLevel:** `COMPOS_MENTIS`, `APATHY`, `SOMNOLENCE`, `DELIRIUM`, `STUPOR`, `COMA`
 
 ---
 
 ## Automatic Triage Determination (ATS)
-The API has a built-in clinical intelligence engine that automatically calculates `level_triase` and `prioritas_triase` if omitted, or upgrades them if the calculated urgency is higher than the provided level (using the "Most Urgent Feature" clinical rule).
+The API has a built-in clinical intelligence engine that automatically calculates `triage_level` and `triage_priority` if omitted, or upgrades them if the calculated urgency is higher than the provided level (using the "Most Urgent Feature" clinical rule).
 
 ### How it works:
-1. **DOA (Death on Arrival):** If `doa: true`, returns `HITAM` (DOA) with priority `NON_URGENT`.
-2. **Airway (Jalan Nafas):**
-   - `OBSTRUKSI_TOTAL` → `MERAH` (SEGERA)
-   - `OBSTRUKSI_PARSIAL` → `OREN` (DARURAT)
-   - `BEBAS` → `HIJAU` (SEMI_URGENT)
-3. **Breathing (Pernafasan):**
-   - RR < 5 or > 35 / SpO2 < 90% → `MERAH` (SEGERA)
-   - RR 5-8 or 30-35 / SpO2 90-92% → `OREN` (DARURAT)
-   - RR 9-11 or 25-29 / SpO2 93-95% → `KUNING` (URGENT)
-   - RR 12-24 or SpO2 >= 96% → `HIJAU` (SEMI_URGENT)
-4. **Circulation (Sirkulasi):**
-   - Nadi < 40 or > 150 / Sistolik < 80 mmHg → `MERAH` (SEGERA)
-   - Nadi 40-49 or 120-150 / Sistolik 80-89 mmHg or > 220 mmHg → `OREN` (DARURAT)
-   - Nadi 50-59 or 100-119 / Sistolik 90-99 mmHg or 180-220 mmHg → `KUNING` (URGENT)
-5. **Disability (Neurologis / GCS):**
-   - GCS < 9 or `KOMA` → `MERAH` (SEGERA)
-   - GCS 9-12 or `SOMNOLEN`/`SOPOR` → `OREN` (DARURAT)
-   - GCS 13-14 or `APATIS` → `KUNING` (URGENT)
-   - GCS 15 or `COMPOS_MENTIS` → `HIJAU` (SEMI_URGENT)
-6. **Pain Scale (Skala Nyeri):**
-   - Skala 8-10 → `OREN` (DARURAT)
-   - Skala 4-7 → `KUNING` (URGENT)
-   - Skala 1-3 → `HIJAU` (SEMI_URGENT)
-   - Skala 0 → `BIRU` (NON_URGENT)
-7. **Temperature (Suhu):**
-   - Suhu < 35°C or > 40°C → `OREN` (DARURAT)
-   - Suhu 38.5°C - 40°C → `KUNING` (URGENT)
-   - Suhu 37.5°C - 38.4°C → `HIJAU` (SEMI_URGENT)
+1. **DOA (Death on Arrival):** If `doa: true`, returns `BLACK` (DOA) with priority `NON_URGENT`.
+2. **Airway:**
+   - `TOTAL_OBSTRUCTION` → `RED` (IMMEDIATE)
+   - `PARTIAL_OBSTRUCTION` → `ORANGE` (EMERGENCY)
+   - `CLEAR` → `GREEN` (SEMI_URGENT)
+3. **Breathing:**
+   - RR < 5 or > 35 / SpO2 < 90% → `RED` (IMMEDIATE)
+   - RR 5-8 or 30-35 / SpO2 90-92% → `ORANGE` (EMERGENCY)
+   - RR 9-11 or 25-29 / SpO2 93-95% → `YELLOW` (URGENT)
+   - RR 12-24 or SpO2 >= 96% → `GREEN` (SEMI_URGENT)
+4. **Circulation:**
+   - Heart Rate < 40 or > 150 / Systolic < 80 mmHg → `RED` (IMMEDIATE)
+   - Heart Rate 40-49 or 120-150 / Systolic 80-89 mmHg or > 220 mmHg → `ORANGE` (EMERGENCY)
+   - Heart Rate 50-59 or 100-119 / Systolic 90-99 mmHg or 180-220 mmHg → `YELLOW` (URGENT)
+5. **Disability (Neurological / GCS):**
+   - GCS < 9 or `COMA` → `RED` (IMMEDIATE)
+   - GCS 9-12 or `SOMNOLENCE`/`STUPOR` → `ORANGE` (EMERGENCY)
+   - GCS 13-14 or `APATHY` → `YELLOW` (URGENT)
+   - GCS 15 or `COMPOS_MENTIS` → `GREEN` (SEMI_URGENT)
+6. **Pain Scale:**
+   - Scale 8-10 → `ORANGE` (EMERGENCY)
+   - Scale 4-7 → `YELLOW` (URGENT)
+   - Scale 1-3 → `GREEN` (SEMI_URGENT)
+   - Scale 0 → `BLUE` (NON_URGENT)
+7. **Temperature:**
+   - Temp < 35°C or > 40°C → `ORANGE` (EMERGENCY)
+   - Temp 38.5°C - 40°C → `YELLOW` (URGENT)
+   - Temp 37.5°C - 38.4°C → `GREEN` (SEMI_URGENT)
 8. **Checklist Master Rules (`items`):**
    - If any selected master rules have a pre-defined level, it is factored in, and the highest overall calculated urgency is saved!

@@ -3,19 +3,91 @@ import { prisma } from '../config/db.conf.js';
 const TriageModel = {
   // Master Triage Case Type
   findAllCaseTypes: () => prisma.masterTriageCaseType.findMany({
-    where: { aktif: true },
-    orderBy: { nama_kasus: 'asc' }
+    where: { deleted_at: null },
+    orderBy: { case_name: 'asc' }
+  }),
+
+  findCaseTypeById: (id) => prisma.masterTriageCaseType.findFirst({
+    where: { id: BigInt(id), deleted_at: null }
+  }),
+
+  createCaseType: (data) => prisma.masterTriageCaseType.create({
+    data
+  }),
+
+  updateCaseType: (id, data) => prisma.masterTriageCaseType.update({
+    where: { id: BigInt(id) },
+    data
+  }),
+
+  deleteCaseType: (id) => prisma.masterTriageCaseType.update({
+    where: { id: BigInt(id) },
+    data: { deleted_at: new Date(), is_active: false }
   }),
 
   // Master Triage Category
   findAllCategories: () => prisma.masterTriageCategory.findMany({
+    where: { deleted_at: null },
     include: {
       rules: {
-        where: { aktif: true },
-        orderBy: { skala: 'asc' }
+        where: { deleted_at: null, is_active: true },
+        orderBy: { scale: 'asc' }
       }
     },
-    orderBy: { urutan: 'asc' }
+    orderBy: { sort_order: 'asc' }
+  }),
+
+  findCategoryById: (id) => prisma.masterTriageCategory.findFirst({
+    where: { id: BigInt(id), deleted_at: null },
+    include: { rules: { where: { deleted_at: null, is_active: true } } }
+  }),
+
+  createCategory: (data) => prisma.masterTriageCategory.create({
+    data
+  }),
+
+  updateCategory: (id, data) => prisma.masterTriageCategory.update({
+    where: { id: BigInt(id) },
+    data
+  }),
+
+  deleteCategory: (id) => prisma.masterTriageCategory.update({
+    where: { id: BigInt(id) },
+    data: { 
+      deleted_at: new Date(),
+      rules: { 
+        updateMany: { 
+          where: { deleted_at: null }, 
+          data: { deleted_at: new Date(), is_active: false } 
+        } 
+      } 
+    }
+  }),
+
+  // Master Triage Rule
+  findAllRules: () => prisma.masterTriageRule.findMany({
+    where: { deleted_at: null, is_active: true },
+    include: { category: { where: { deleted_at: null } } },
+    orderBy: { rule_name: 'asc' }
+  }),
+
+  findRuleById: (id) => prisma.masterTriageRule.findFirst({
+    where: { id: BigInt(id), deleted_at: null },
+    include: { category: true }
+  }),
+
+  createRule: (data) => prisma.masterTriageRule.create({
+    data
+  }),
+
+  updateRule: (id, data) => prisma.masterTriageRule.update({
+    where: { id: BigInt(id) },
+    data
+  }),
+
+  deleteRule: (id) => prisma.masterTriageRule.update({
+    where: { id: BigInt(id) },
+    data: { deleted_at: new Date(), is_active: false }
   }),
 
   // Triage Assessment
@@ -26,7 +98,7 @@ const TriageModel = {
         assessment_items: {
           create: items.map(item => ({
             master_triage_rule_id: item.rule_id,
-            catatan: item.catatan
+            notes: item.notes
           }))
         }
       },
@@ -37,34 +109,48 @@ const TriageModel = {
     return assessment;
   }),
 
-  findAssessmentById: (id) => prisma.triageAssessment.findUnique({
-    where: { id: BigInt(id) },
+  findAssessmentById: (id) => prisma.triageAssessment.findFirst({
+    where: { id: BigInt(id), deleted_at: null },
     include: {
-      macam_kasus: true,
+      case_type: { where: { deleted_at: null } },
       assessment_items: {
+        where: { deleted_at: null },
         include: {
-          master_triage_rule: true
+          master_triage_rule: { where: { deleted_at: null } }
         }
       }
     }
   }),
 
   findAllAssessments: (params = {}) => {
-    const { no_rawat, no_rm, skip = 0, take = 10 } = params;
+    const { visit_number, medical_record_number, skip = 0, take = 10 } = params;
     return prisma.triageAssessment.findMany({
       where: {
-        ...(no_rawat && { no_rawat }),
-        ...(no_rm && { no_rm }),
+        ...(visit_number && { visit_number }),
+        ...(medical_record_number && { medical_record_number }),
         deleted_at: null
       },
       include: {
-        macam_kasus: true
+        case_type: { where: { deleted_at: null } }
       },
-      orderBy: { waktu_assessment: 'desc' },
+      orderBy: { assessment_time: 'desc' },
       skip: Number(skip),
       take: Number(take)
     });
-  }
+  },
+
+  deleteAssessment: (id) => prisma.triageAssessment.update({
+    where: { id: BigInt(id) },
+    data: { 
+      deleted_at: new Date(),
+      assessment_items: {
+        updateMany: {
+          where: { deleted_at: null },
+          data: { deleted_at: new Date() }
+        }
+      }
+    }
+  })
 };
 
 export default TriageModel;

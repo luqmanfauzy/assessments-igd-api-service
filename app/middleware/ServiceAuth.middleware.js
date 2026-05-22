@@ -9,13 +9,13 @@ const serviceAuth = (req, res, next) => {
 
   if (!expectedToken) {
     return res.status(500).json(
-      buildResponse(false, 'Service token is not configured on server')
+      buildResponse(false, 'Token layanan tidak terkonfigurasi di server')
     );
   }
 
   if (!serviceToken || serviceToken !== expectedToken) {
     return res.status(401).json(
-      buildResponse(false, 'Unauthorized: Invalid or missing X-Service-Token')
+      buildResponse(false, 'Tidak diizinkan: X-Service-Token tidak valid atau tidak ditemukan')
     );
   }
 

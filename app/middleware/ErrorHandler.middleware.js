@@ -11,7 +11,7 @@ const errorHandler = (err, req, res, next) => {
   logger.error(err.message, err);
 
   return res.status(statusCode).json(
-    buildResponse(false, err.message || 'Internal server error', null, {
+    buildResponse(false, err.message || 'Internal Server Error', null, {
       path: req.originalUrl
     })
   );
